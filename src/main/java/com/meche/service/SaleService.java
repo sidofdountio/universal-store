@@ -56,7 +56,7 @@ public class SaleService implements SaleDao {
 
     @Override
     public List<Sale> findByMonthAndYear(Month month, String year, Sort sort) {
-        return saleRepo.findByMonthAndYear(month, year, sort.ascending());
+        return saleRepo.findByMonthAndYear(month, year, sort.descending());
     }
 
     @Override

@@ -71,7 +71,8 @@ public class InventoryOperation implements StockManager {
         Inventory inventoryToAdd = new Inventory();
         System.out.println("=================================================");
         if (inventoryList.isEmpty()) {
-            Inventory inventoryFirst = new Inventory(
+            Inventory inventoryFirst;
+            inventoryFirst = new Inventory(
                     1L, LocalDateTime.now(),
                     label,
                     productName,
@@ -180,6 +181,7 @@ public class InventoryOperation implements StockManager {
         int quantityProvideByUser = 0;
         Long productId = 0L;
         String productName = "";
+        boolean isNotPresent = false;
 
 
 //      Ensure that with have alredy purchase.
@@ -193,18 +195,20 @@ public class InventoryOperation implements StockManager {
             Inventory inventoryToAdd = new Inventory();
             quantityProvideByUser = sale.getQuantity();
             productName = sale.getProduct().getName();
-            for (Inventory stockInventoty : inventoryList) {
+            for (Inventory stockInventory : inventoryList) {
 //            stock product.
-                if (stockInventoty.getNewQuantity() < quantityProvideByUser && stockInventoty.isUp()) {
+                if (stockInventory.getNewQuantity() < quantityProvideByUser && stockInventory.isUp()) {
                     throw new IllegalStateException("Quantity in store it's less thant provider");
                 }
-                if (productName.equalsIgnoreCase(stockInventoty.getProductName()) && stockInventoty.isUp()) {
+                if (productName.equalsIgnoreCase(stockInventory.getProductName()) && stockInventory.isUp()) {
+                    isNotPresent = true;
+                    log.info("first loop");
 //                  We manage only product that is up.
-                    oldPrice = stockInventoty.getOrldPrice();
+                    oldPrice = stockInventory.getOrldPrice();
                     newPrice = sale.getPrice();//ancien prix calcule apres achat.
 
                     oldAmount = quantityProvideByUser * newPrice; // prix calcule
-                    newQuantity = stockInventoty.getNewQuantity();
+                    newQuantity = stockInventory.getNewQuantity();
                     newAmount = quantityProvideByUser * newPrice;
                     quantity = newQuantity - quantityProvideByUser;
                     inventoryToAdd.setLabel(label);
@@ -223,12 +227,16 @@ public class InventoryOperation implements StockManager {
 
                     inventoryToAdd.setUp(true);
 //                  Turn the position of last product to false
-                    stockInventoty.setUp(false);
+                    stockInventory.setUp(false);
 //                    Update change of inventory after seller.
-//                    Save the change mind save the new quantity that reduice
-                    inventoryService.updateInventory(stockInventoty);
-                    break;
+//                    Save the change mind save the new quantity that reduce
+                    inventoryService.updateInventory(stockInventory);
+
                 }
+            }
+
+            if(!isNotPresent){
+                throw new IllegalStateException("Please first purchase");
             }
 //            Add to list CMUP
             inventoryToCMUSale.add(inventoryToAdd);

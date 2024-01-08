@@ -24,7 +24,7 @@ public interface InvoiceSaleRepo extends JpaRepository<InvoiceSale, Long> {
     @Query("SELECT i FROM InvoiceSale i WHERE i.invoiceNumber = :invoiceNumber")
     List<InvoiceSale> findByInvoiceNumber(@Param("invoiceNumber") String invoiceNumber);
 
-    @Query("SELECT i FROM InvoiceSale i WHERE i.month = :month AND i.year = :year ")
+    @Query("SELECT i FROM InvoiceSale i WHERE i.month = :month AND i.year = :year")
     List<InvoiceSale> findByMonthAndYear(@Param("month") Month month, @Param("year") String year, Sort sort);
 
     @Query("SELECT i FROM InvoiceSale i WHERE i.day = :day AND i.month = :month ")

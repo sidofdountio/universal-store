@@ -50,7 +50,7 @@ public class InvoiceSaleService implements InvoiceSaleDao {
     @Override
     public List<InvoiceSale> findByMonthAndYear(Month month, String year, Sort sort) {
         log.info("Fetching Invoice Sale By month {} and year {} .", month, year);
-        return invoiceSaleRepo.findByMonthAndYear(month, year, sort.ascending());
+        return invoiceSaleRepo.findByMonthAndYear(month, year, sort.descending());
     }
 
     @Override
