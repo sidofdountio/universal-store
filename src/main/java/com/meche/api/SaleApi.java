@@ -90,11 +90,13 @@ public class SaleApi {
     @PutMapping("/validSale")
     public ResponseEntity<Sale> ValidSale(@RequestBody Sale saleToValid) throws InterruptedException {
         Sale saleById = saleService.getSale(saleToValid.getId());
+
         if (saleById == null) {
             return new ResponseEntity<>(NOT_FOUND);
         }
         saleToValid.setStatus(PAID);
         Sale validSale = saleService.updateSale(saleToValid);
+        TimeUnit.SECONDS.sleep(2);
         return new ResponseEntity<>(validSale, CREATED);
     }
 
@@ -110,7 +112,6 @@ public class SaleApi {
         List<InvoiceSale> invoiceSales = new ArrayList<>();
         List<Inventory> inventoryList = inventoryService.INVENTORY_LIST();
         final List<Inventory> cmupForSale = inventoryOperation.cmupForSale("SALE", saleToSave, inventoryList);
-
         Customer customerById = customerService.getCustomerById(saleToSave.get(0).getCustomer().getId());
 //        TODO: I will update this code soon.
 //        calcul the amount of transaction.
@@ -136,7 +137,6 @@ public class SaleApi {
         return new ResponseEntity<>(saleSaved, CREATED);
     }
 
-    /***/
     @GetMapping("/month")
     public ResponseEntity<List<Sale>> getSaleByMonth()
             throws InterruptedException {

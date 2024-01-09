@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${CONTAINER_PORT:8080}
   error:
     include-message: always
 
@@ -7,12 +7,12 @@ spring:
   profiles:
     active: ${ACTIVE_PROFILE:dev}
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}:5332/${POSTGRES_DATABASE}
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
     username: sidof
     password: sidof1/@
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

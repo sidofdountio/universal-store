@@ -1,6 +1,7 @@
 package com.meche.repo;
 
 import com.meche.model.Sale;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,10 +18,11 @@ import java.util.List;
 
 public interface SaleRepo extends JpaRepository<Sale, Long> {
     @Override
-    @Query("SELECT i FROM Sale i  ORDER BY i.id desc ")
+    @Query("SELECT i FROM Sale i  ORDER BY i.id desc")
     List<Sale> findAll();
 
-    @Query("SELECT i FROM Sale i WHERE i.month = :month AND i.year = :year ")
+
+    @Query("SELECT i FROM Sale i WHERE i.month = :month AND i.year = :year")
     List<Sale> findByMonthAndYear(@Param("month") Month month, @Param("year") String year, Sort sort);
 
     @Query("SELECT i FROM Sale i WHERE i.day = :day AND i.month = :month ")

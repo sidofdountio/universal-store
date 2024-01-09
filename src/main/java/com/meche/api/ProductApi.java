@@ -20,7 +20,7 @@ import static org.springframework.http.HttpStatus.*;
  */
 @RestController
 @RequestMapping("/api/v1/hair/product")
-@CrossOrigin(origins = "*", maxAge = 3600,allowedHeaders = "*")
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class ProductApi {
@@ -41,7 +41,7 @@ public class ProductApi {
 
     @PostMapping
     public ResponseEntity<Product> saveProduct(@RequestBody Product productToSave) {
-        if (productToSave.getCode().equals("")){
+        if (productToSave.getCode().isEmpty()) {
             String code = UUID.randomUUID().toString().substring(0, 10);
             productToSave.setCode(code);
         }
@@ -57,7 +57,7 @@ public class ProductApi {
     @DeleteMapping("/{id}")
     public ResponseEntity<Product> delete(@PathVariable("id") Long id) {
         boolean existProduct = productService.existProduct(id);
-        if (!existProduct){
+        if (!existProduct) {
             return new ResponseEntity<>(NOT_FOUND);
         }
         productService.deleteProduct(id);

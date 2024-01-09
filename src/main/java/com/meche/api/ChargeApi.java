@@ -1,12 +1,20 @@
 package com.meche.api;
 
+import com.meche.model.Benefice;
 import com.meche.model.Charge;
+import com.meche.model.Purchase;
+import com.meche.model.Sale;
 import com.meche.service.ChargeService;
+import com.meche.service.PurchaseService;
+import com.meche.service.SaleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -25,6 +33,8 @@ import static org.springframework.http.HttpStatus.OK;
 public class ChargeApi {
 
     private final ChargeService chargeService;
+    private final SaleService saleService;
+    private final PurchaseService purchaseService;
 
     @GetMapping
     public ResponseEntity<List<Charge>> charges() {
@@ -52,4 +62,50 @@ public class ChargeApi {
         chargeService.delete(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/monthWinner")
+    public ResponseEntity<Benefice>monthWinner() {
+        Month currentMonth = LocalDateTime.now().getMonth();
+        List<Purchase> purchases = purchaseService.findByMonth(currentMonth);
+        double purchaseAmount=0;
+        for (Purchase purchase: purchases){
+            if(purchase.getMonth() == currentMonth){
+                purchaseAmount += purchase.getAmount();
+            }
+        }
+
+        List<Sale> sales = saleService.findByMonth(currentMonth);
+        double saleAmount=0;
+        for (Sale sale: sales){
+            if(sale.getMonth() == currentMonth){
+                saleAmount += sale.getAmount();
+            }
+        }
+        double chargeAmount = getChargeAmount();
+        double depenceTotal = purchaseAmount + chargeAmount;
+        double beneficeRealise = saleAmount - depenceTotal      ;
+       var gainProbable = Benefice.builder()
+               .charge(chargeAmount)
+               .purchase(purchaseAmount)
+               .sale(saleAmount)
+               .potentialWinner(beneficeRealise)
+               .build();
+        return new ResponseEntity<>(gainProbable, OK);
+    }
+
+    private double getChargeAmount() {
+        List<Charge> charges = chargeService.getCharges();
+
+        double chargeAmount=0;
+        for (Charge charge  : charges){
+            double electricity = charge.getElectricity();
+            double loyer = charge.getLoyer();
+            double impot = charge.getImpot();
+            double ration = charge.getRation();
+            double totalSalary = charge.getTotalSalary();
+            double transport = charge.getTransport();
+            chargeAmount = electricity + loyer + impot+ration+transport+totalSalary;
+        }
+        return chargeAmount;
+    }
+
 }
