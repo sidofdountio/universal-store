@@ -54,32 +54,7 @@ public class ApplicationConfig {
         return configuration.getAuthenticationManager();
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:80","http://localhost:4200","http://localhost:8080"));
-        configuration.setAllowedHeaders(Arrays.asList(
-                ACCEPT,
-                AUTHORIZATION,
-                CONTENT_TYPE,
-                ORIGIN,"Jwt-Token",
-                ACCESS_CONTROL_ALLOW_ORIGIN,
-                ACCESS_CONTROL_REQUEST_METHOD,
-                ACCESS_CONTROL_ALLOW_HEADERS,
-                ACCESS_CONTROL_REQUEST_HEADERS,"X-Requested-With","Origin, Accept"
-        ));
-        configuration.setExposedHeaders(Arrays.asList(ACCEPT,
-                AUTHORIZATION,
-                CONTENT_TYPE,
-                ORIGIN, ACCESS_CONTROL_ALLOW_ORIGIN,
-                ACCESS_CONTROL_ALLOW_CREDENTIALS,
-                "Jwt-Token","Filename"
-        ));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","DELETE","PUT"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -80,7 +80,6 @@
 			<properties>
 				<spring.profiles.active>prod</spring.profiles.active>
 			</properties>
-
 		</profile>
 	</profiles>
 

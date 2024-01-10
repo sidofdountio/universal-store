@@ -16,10 +16,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+
+import java.util.Arrays;
 
 import static com.meche.security.model.Role.ROLE_ADMIN;
 import static com.meche.security.model.Role.ROLE_USER;
+import static org.springframework.http.HttpHeaders.*;
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -97,9 +104,7 @@ public class SecurityConfiguration {
                         .permitAll()
                 );
 
-
-
-
         return http.build();
     }
+
 }
