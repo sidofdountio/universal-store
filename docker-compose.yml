@@ -10,9 +10,38 @@ services:
     volumes:
       - db:/data/postgres
     ports:
-      - 5332:5432
+      - 5433:5432
+    expose:
+      - 5432
     networks:
       - db
+
+
+  api_universal:
+    depends_on:
+      - universalStore_db
+    container_name: api_universal
+    build:
+      context: .
+      args:
+        CONTAINER_PORT: ${CONTAINER_PORT}
+    image: api_universal:v1
+    restart: unless-stopped
+    env_file:
+      - ${ENV_FILE}
+    ports:
+      - ${CONTAINER_PORT}:${HOST_PORT}
+    environment:
+      SPRING_APPLICATION_JSON: '{
+          "spring.datasource.url"  : "jdbc:postgresql://universalStore_db:5432/universal",
+          "spring.datasource.username" : "sidof",
+          "spring.datasource.password" : "sidof1/@",
+          "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.PostgreSQLDialect",
+          "spring.jpa.hibernate.ddl-auto" : "update"
+        }'
+    networks:
+      - db
+
 networks:
   db:
     driver: bridge
