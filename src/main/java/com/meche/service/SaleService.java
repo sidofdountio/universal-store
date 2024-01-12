@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Month;
-import java.time.Year;
 import java.util.List;
 
 /**
@@ -55,8 +54,8 @@ public class SaleService implements SaleDao {
     }
 
     @Override
-    public List<Sale> findByMonthAndYear(Month month, String year, Sort sort) {
-        return saleRepo.findByMonthAndYear(month, year, sort.descending());
+    public List<Sale> findByMonthAndYear(Month month, String year) {
+        return saleRepo.findByMonthAndYear(month, year);
     }
 
     @Override

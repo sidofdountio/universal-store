@@ -1,14 +1,12 @@
 package com.meche.repo;
 
 import com.meche.model.Sale;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.Month;
-import java.time.Year;
 import java.util.List;
 
 /**
@@ -22,8 +20,8 @@ public interface SaleRepo extends JpaRepository<Sale, Long> {
     List<Sale> findAll();
 
 
-    @Query("SELECT i FROM Sale i WHERE i.month = :month AND i.year = :year")
-    List<Sale> findByMonthAndYear(@Param("month") Month month, @Param("year") String year, Sort sort);
+    @Query("SELECT i FROM Sale i WHERE i.month = :month AND i.year = :year order i.id desc")
+    List<Sale> findByMonthAndYear(@Param("month") Month month, @Param("year") String year);
 
     @Query("SELECT i FROM Sale i WHERE i.day = :day AND i.month = :month ")
     List<Sale> findByDayAndMonth(@Param("day") int day, @Param("month") Month month, Sort sort);

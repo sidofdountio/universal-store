@@ -69,7 +69,6 @@ public class InventoryOperation implements StockManager {
         int qty = 0;
         double amt = 0;
         Inventory inventoryToAdd = new Inventory();
-        System.out.println("=================================================");
         if (inventoryList.isEmpty()) {
             Inventory inventoryFirst;
             inventoryFirst = new Inventory(
@@ -88,7 +87,6 @@ public class InventoryOperation implements StockManager {
                     year
             );
             inventoryToPucharse = inventoryFirst;
-
         }
         boolean productNameExist = false;
         for (Inventory inventoryStock : inventoryList) {
@@ -105,8 +103,6 @@ public class InventoryOperation implements StockManager {
         }
         if (productNameExist){
             log.info("inventory  filter 1 ok : {}", inventoryPresentInStock);
-
-
             final double newPriceToAdd = purchase.getSalePrice();
 //                orld quantity + new purchase quantity.
             qty = inventoryPresentInStock.getNewQuantity() + quantityPovider; //calcul de la nouvel quatite.
@@ -135,7 +131,7 @@ public class InventoryOperation implements StockManager {
 
             productById.setPrice(newPrice);
             productService.updateProduct(productById);
-             inventoryToPucharse = inventoryToAdd;
+            inventoryToPucharse = inventoryToAdd;
 
         }else {
 
@@ -154,8 +150,6 @@ public class InventoryOperation implements StockManager {
             inventoryToPucharse = inventoryNew;
             productById.setPrice(newPrice);
         }
-
-        System.out.println("=================================================");
         return inventoryToPucharse;
     }
 
@@ -197,12 +191,13 @@ public class InventoryOperation implements StockManager {
             productName = sale.getProduct().getName();
             for (Inventory stockInventory : inventoryList) {
 //            stock product.
-                if (stockInventory.getNewQuantity() < quantityProvideByUser && stockInventory.isUp()) {
-                    throw new IllegalStateException("Quantity in store it's less thant provider");
-                }
+
                 if (productName.equalsIgnoreCase(stockInventory.getProductName()) && stockInventory.isUp()) {
                     isNotPresent = true;
-                    log.info("first loop");
+
+                    if (stockInventory.getNewQuantity() == 0) {
+                        throw new IllegalStateException("Quantity in store it's less thant provider");
+                    }
 //                  We manage only product that is up.
                     oldPrice = stockInventory.getOrldPrice();
                     newPrice = sale.getPrice();//ancien prix calcule apres achat.
@@ -231,10 +226,8 @@ public class InventoryOperation implements StockManager {
 //                    Update change of inventory after seller.
 //                    Save the change mind save the new quantity that reduce
                     inventoryService.updateInventory(stockInventory);
-
                 }
             }
-
             if(!isNotPresent){
                 throw new IllegalStateException("Please first purchase");
             }

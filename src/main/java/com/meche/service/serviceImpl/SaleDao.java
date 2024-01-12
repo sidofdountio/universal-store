@@ -4,7 +4,6 @@ import com.meche.model.Sale;
 import org.springframework.data.domain.Sort;
 
 import java.time.Month;
-import java.time.Year;
 import java.util.List;
 
 /**
@@ -22,7 +21,7 @@ public interface SaleDao {
 
     List<Sale> SALES();
 
-    List<Sale> findByMonthAndYear(Month month, String year, Sort sort);
+    List<Sale> findByMonthAndYear(Month month, String year);
 
     List<Sale> findByDayAndMonth(int day, Month month, Sort sort);
 
