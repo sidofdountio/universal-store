@@ -12,9 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.*;
-import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -66,12 +64,10 @@ public class SaleApi {
             throws InterruptedException {
         List<Sale> byMonthAndYear = new ArrayList<>();
         if (month.equalsIgnoreCase("null")) {
-            log.info("First Filter");
             Month month1 = now().getMonth();
-            byMonthAndYear = saleService.findByMonthAndYear(month1, year, Sort.by("month", "year"));
+            byMonthAndYear = saleService.findByMonthAndYear(month1, year);
         } else {
-            log.info(" else First Filter");
-            byMonthAndYear = saleService.findByMonthAndYear(Month.valueOf(month), year, Sort.by("month", "year"));
+            byMonthAndYear = saleService.findByMonthAndYear(Month.valueOf(month), year);
         }
         return new ResponseEntity<List<Sale>>(byMonthAndYear, OK);
     }
